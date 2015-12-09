@@ -20,10 +20,37 @@ app
 //todos roteadores que eu tenho
 let routers = require('./routers/');// (index.js)
 
+let config = require('./config.js');
+
+//console.log(config);
+
+
+
+
 app.use('/api',routers.api);
 
+let mongoose = require('mongoose');
 
-app.listen(3000, serverLogInit);
+//template block. o que vc poem dentro de ${} é javascript
+let urlDb=`mongodb://${config.db.host}/${config.db.name}`;
+
+mongoose.connect(urlDb);
+	
+mongoose.connection.once('open', function () {
+
+	//app.listen(3000, serverLogInit);
+	app.listen(3000, ()=>console.log('> localhost:3000'));
+
+
+});
+
+
+mongoose.connection.on('error',function(err){
+	console.log('database connection error');
+});
+
+
+//app.listen(3000, serverLogInit);
 
 function serverLogInit() {
 	//console.log(process.env);
